@@ -3,13 +3,13 @@
 
 -module(html_parser).
 
--export([parse_battle_scribe/1]).
+-export([parse_battle_scribe_to_xml/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  API Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-parse_battle_scribe(File)->
+parse_battle_scribe_to_xml(File)->
     html_file_parser(File).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -20,7 +20,7 @@ html_file_parser(File)->
     % Read file
     Raws = read(File),
     Cleans = clean_file(Raws),
-    {ParseResults,Mis} = xmerl_scan:string(Cleans),
+    {ParseResults,_} = xmerl_scan:string(Cleans),
     ParseResults.
 
 clean_file(Lines)->
@@ -34,12 +34,6 @@ clean_file(Lines)->
     MutD = re:replace(MutC,"<br/>","",[global,{return,list}]),
     MutE = re:replace(MutD,"<head>.+</head>","",[global,{return,list},dotall]),
     "<xml>" ++ MutE ++ "</xml>".
-
-parse_army_type(Text)->
-    1.
-
-parse_units(Text)->
-    1.
 
 read(N) ->
     {ok,Data} = file:read_file(N),
